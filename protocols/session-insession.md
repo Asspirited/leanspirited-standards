@@ -43,6 +43,55 @@ Phrases: "we're nearly out of time", "quick before we finish"
 
 ---
 
+## STANDING LENS: UI/UX quality standard
+
+Before building any UI, state:
+1. Who is using this, on what device, under what pressure?
+2. What is the ONE thing this screen must make effortless?
+3. What could go wrong visually or interactively?
+
+After building, run this checklist before presenting output:
+
+### Layout and composition
+- [ ] No element overlaps another unintentionally (check at multiple widths)
+- [ ] Absolute-positioned elements checked against all other positioned elements
+- [ ] Content does not overflow its container at narrow widths
+- [ ] Whitespace is intentional — neither cramped nor wasteful
+- [ ] Visual hierarchy is clear: primary action dominant, secondary recessive
+- [ ] Reading order follows natural eye path
+
+### Typography
+- [ ] Font sizes consistent with type scale
+- [ ] Line lengths readable (45–75 chars for body)
+- [ ] Sufficient contrast on all backgrounds including gradients
+- [ ] Heading hierarchy logical, no skipped levels
+- [ ] No accidental system font fallbacks
+
+### Colour and visual language
+- [ ] Colour used with intent, not decoration
+- [ ] Interactive elements visually distinct from static ones
+- [ ] Hover and active states on all clickable elements
+- [ ] No garish or arbitrary colour choices
+
+### Interaction and behaviour
+- [ ] Primary CTA always visible without scrolling on first load
+- [ ] Every button has a clear label
+- [ ] State changes (active, selected, loading) communicated visually
+- [ ] Errors and empty states handled — nothing silently fails
+- [ ] User always knows where they are and what they can do next
+
+### The professional user test [adapt per project]
+- [ ] Would the target user trust this to present to their own clients?
+- [ ] Is every alignment intentional?
+- [ ] Does the UI feel considered or assembled?
+
+### Responsive check
+- [ ] Mentally tested at: mobile (375px), tablet (768px), laptop (1280px)
+- [ ] No horizontal scroll at any standard width
+- [ ] Touch targets 44px minimum on mobile
+
+---
+
 ## Pipeline Rule
 100% statement and branch coverage required. Full green before merge. No exceptions.
 
@@ -126,3 +175,8 @@ At any point Rod asks "what decisions have we made?", list ADR titles and status
 - ADR session summary: titles, IDs, one-line status for each ADR written
 - Flag any decisions made verbally but not yet written as ADRs
 - Confirm `/docs/decisions/` index is current
+
+### UI/UX session note
+Note any UI/UX issues spotted but not fixed:
+"UI debt: [description] — [screen] — [priority: fix next / backlog]"
+Log as [PROJECT]-UX-NNN backlog items.
