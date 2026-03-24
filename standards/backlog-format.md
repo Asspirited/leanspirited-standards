@@ -59,6 +59,7 @@ Feature: [Feature name]
 | `STD-` | LeanSpirited Standards (cross-cutting) | Asspirited/leanspirited-standards |
 | `BL-ORACLE-` | House Name Oracle (Cusslab panel) | Asspirited/cusslab |
 | `TBT-` | Through the Biscuit Tin | Asspirited/cusslab (branch: through-the-biscuit-tin) |
+| `UH-` | Universal Harmonix (UAP investigation app) | Asspirited/Universal-Harmonix |
 
 ### Registering a new prefix
 Add a row to this table via PR to `leanspirited-standards` before raising the first item.
