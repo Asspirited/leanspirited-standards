@@ -17,7 +17,9 @@ Read `.claude/shared-session-state.md` — carries what was done last session,
 what's open, what the other Claude (ai/code) did. Do not skip.
 
 ### Step 4: Backlog review
-Fetch the product backlog. Identify:
+Fetch both backlog files — **BL** (`docs/backlog.md`) and **WL** (`docs/watchlist.md`).
+Both must exist. If either is missing on a new project, create it before proceeding.
+Identify:
 - Any items marked **SHIP TODAY** or **Critical**
 - Any items **In Progress** from last session
 - Top 3 open items by priority
