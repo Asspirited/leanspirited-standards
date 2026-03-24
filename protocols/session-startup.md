@@ -16,9 +16,10 @@ Fetch and read `.claude/testing-standards.md` in full.
 Read `.claude/shared-session-state.md` — carries what was done last session,
 what's open, what the other Claude (ai/code) did. Do not skip.
 
-### Step 4: Backlog review
-Fetch both backlog files — **BL** (`docs/backlog.md`) and **WL** (`docs/watchlist.md`).
-Both must exist. If either is missing on a new project, create it before proceeding.
+### Step 4: Backlog and Waste Log review
+Fetch both files — **BL** (`docs/backlog.md`) and **WL** (`docs/waste-log.md`).
+Both must exist. WL = Waste Log. If either is missing on a new project, create it before proceeding.
+WL items with category "Risk (potential waste)" inform what could blow up this session.
 Identify:
 - Any items marked **SHIP TODAY** or **Critical**
 - Any items **In Progress** from last session

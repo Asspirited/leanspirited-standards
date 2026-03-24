@@ -8,11 +8,15 @@
 ### Step 1: Pipeline check
 Is the pipeline green? If not, do not close. Fix or explicitly park with a blocked backlog item.
 
-### Step 2: Backlog update
-For every item touched this session:
+### Step 2: Backlog and Waste Log update
+For every BL item touched this session:
 - Update status (Open → In Progress → Done / Blocked / Deferred)
 - Add any new items surfaced during the session
 - Note any acceptance criteria changes
+
+For the WL (`docs/waste-log.md`):
+- Close any WL items resolved this session
+- Add any new waste observations made during the session (defects, waits, risks surfaced)
 
 ### Step 3: ADR session summary
 List every ADR written this session: title, ID, one-line status.

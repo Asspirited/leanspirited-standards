@@ -66,6 +66,40 @@ Add a row to this table via PR to `leanspirited-standards` before raising the fi
 
 ---
 
+---
+
+## Waste Log Format (WL)
+
+Every product has a `docs/waste-log.md`. WL = Waste Log. Always. No exceptions.
+File is `docs/waste-log.md`. Items are prefixed `WL-[PROJECT-PREFIX]-NNN` (e.g. `WL-UH-001`).
+
+**What goes in it:** Any observation of waste — defects, waiting, over-processing, unnecessary complexity, repeated manual steps, risks that will become waste if unaddressed. Risks are logged as *potential waste* — the cost they will impose if left unresolved.
+
+**What does NOT go in it:** Feature requests, planned work, HDD hypotheses. Those are BL items.
+
+```markdown
+## WL-[PREFIX]-NNN — [Short title]
+
+**Status:** Open | Closed | Accepted (won't fix)
+**Category:** Defect | Wait | Over-processing | Complexity | Risk (potential waste)
+**Severity:** High | Medium | Low
+**Raised:** YYYY-MM-DD
+**Closed:** YYYY-MM-DD (if applicable)
+
+**Observation:** What was seen — specific, factual, no opinion.
+
+**Waste impact:** What this costs per occurrence or over time (time, errors, rework, blocked work).
+
+**Action:** What to do — or "Accepted: [reason]" if deliberately leaving it.
+```
+
+### WL session obligations
+- When waste is observed mid-session → log it immediately, do not defer to closedown
+- Closedown Step 2: review WL, update any items affected by session work
+- Startup Step 4: read WL alongside BL — open WL items inform session risk posture
+
+---
+
 ## Status Definitions
 
 | Status | Meaning |
