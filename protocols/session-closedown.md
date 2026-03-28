@@ -14,6 +14,12 @@ For every BL item touched this session:
 - Add any new items surfaced during the session
 - Note any acceptance criteria changes
 
+**Display the full backlog report** using the format in `standards/backlog-display.md`:
+- Three tables: Open (N items), Closed Today (N items), Closed Prior (N items)
+- Closed Today includes push time (HH:MM UK time) from git log
+- Summary line with totals
+- This display is mandatory at every closedown, every project
+
 For the WL (`docs/waste-log.md`):
 - Close any WL items resolved this session
 - Add any new waste observations made during the session (defects, waits, risks surfaced)
