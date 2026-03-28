@@ -246,13 +246,26 @@ File lives at: `/[project]/docs/panel-registry.md`
 
 Every idea generated during New Project Start that is not the first build.
 
-Format: `[PREFIX]-NNN: [Title]` with one-line description and status.
+Format: `[PREFIX]-NNN: [Title]` with one-line description, status, and **CD3 score**.
 
 Status options:
 - `FOUNDING` — core to the product, build sequence TBD
 - `NEXT` — clearly the next thing after first build
 - `IDEAS` — worth considering, not yet committed
 - `PARKED` — good idea, wrong time, revisit explicitly
+
+**CD3 scoring — MANDATORY for every backlog item, including new items raised mid-session:**
+
+CD3 = Confidence × Desirability × Deliverability (max 27)
+
+- **Confidence** (1–3): How confident are we that this solves a real user problem?
+  - 1 = hypothesis only, 2 = some evidence, 3 = validated
+- **Desirability** (1–3): How much do users want this?
+  - 1 = nice-to-have, 2 = clear value, 3 = essential
+- **Deliverability** (1–3): How feasible is delivery given current architecture and team?
+  - 1 = complex/unknown, 2 = understood but significant, 3 = straightforward
+
+Score every item at the moment it is raised. Never leave a backlog item without a CD3 score.
 
 All backlog items from this session get this prefix from day one.
 No orphaned ideas. Everything is either in the backlog or ruled out.
