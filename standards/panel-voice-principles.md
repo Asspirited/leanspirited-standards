@@ -22,33 +22,60 @@ responses into a conversation.
 
 ---
 
-## Lever 1 — Flavour banks
+## Lever 1 — Flavour banks, split into mannerisms and flavours
 
 Each character ships with structured data external to the prompt.
-At call time, sample 3–5 entries and inject them as
-"USE THIS SPECIFIC MATERIAL THIS CALL."
+At call time, sample entries and inject them as "USE THIS SPECIFIC
+MATERIAL THIS CALL."
 
-Minimum bank fields (extend per character as useful):
+The bank has two layers — the distinction matters:
+
+**Mannerisms (constant — keep)**
+The shape that makes the character recognisably themselves: opener
+phrases, self-deprecation patterns, analogy devices, closers. Humans
+are repetitive at this level. If Bear never said "Look," or
+"Hydration?" he wouldn't sound like Bear. Mannerisms recur across
+calls by design.
 
 ```
-flavour_banks:
-  places:                # locale-specific — constrain to the product's setting
-  years:                 # "I was there in 2014" material
-  animals:               # for non-sequitur or claim
-  mishaps:               # "I once ate / did / lost"
-  self_corrections:      # "well, we traced their steps"
-  ghost_claims:          # "I knew them personally"
+mannerisms:
+  openers:                # "Look,", "Listen —", "Mate,", "Right,"
+  admit_but_defend:       # "I haven't actually X — life's too short — but"
+  anachronism_device:     # "was basically the [MODERN] of his time"
+  closers:                # "Next question.", "Hydration?", "Moving on."
+  self_deprecating_asides:# "you learn these things", "the body adjusts"
+```
+
+**Flavours (variable — vary)**
+The specific material sampled fresh per call. Two calls on the same
+topic should cite different places, years, animals, anecdotes.
+
+```
+flavours:
+  places:                 # locale-specific — constrain to product setting
+  years:                  # implausibly precise eyewitness material
+  animals:                # for non-sequitur or claim
+  mishaps:                # "I once ate / did / lost"
+  self_corrections:       # "well, we traced their steps"
+  ghost_claims:           # "I knew them personally"
   non_sequiturs:
+  modern_analogies:       # for anachronism device
+  things_X_hasnt_done:    # admit-but-defend material
   credentials_wrong_century:
-  never_touch:           # explicit exclusions — e.g. Bear must not reference
-                         # saltwater crocodiles when the panel's locale is
-                         # Northumberland
 ```
+
+**never_touch**
+Explicit exclusions. Hard list. E.g. Bear's Wall Walkers bank
+excludes "Borneo" and "saltwater crocodile in Borneo" because
+those were over-used in prior prompts and broke locale plausibility.
 
 **Locale constraint is not optional.** Bear's `places` bank for
 Wall Walkers must not contain "Borneo" unless Borneo is the
 intentional non-sequitur of the turn. Locale drift is the most
 visible form of collapse.
+
+**The distinction, in one line:** mannerisms are how they always
+sound; flavours are what they're saying this time.
 
 ---
 
