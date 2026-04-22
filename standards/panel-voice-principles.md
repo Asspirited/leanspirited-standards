@@ -22,6 +22,59 @@ responses into a conversation.
 
 ---
 
+## Lever 0 — The Reactive Model (model the people, not the content)
+
+The three levers below serve one purpose: model the **people**, not
+the content.
+
+A panel works when characters trigger each other — into thinking,
+lying, stonewalling, exaggerating, correcting, or calling out —
+based on five variables per character:
+
+- **Experience** — what they've lived through, what they'd have
+  seen, what they genuinely know.
+- **Propensity to lie, exaggerate, or bullshit for no reason** —
+  high for Bear (confident improvisation), catastrophic for Faldo
+  (golf specificity), low for Ray (silence before invention),
+  zero for Wade (will state a fact and move on).
+- **Propensity to stonewall** — one-to-three word answers. Ray's
+  "Don't." Keane's "Is that supposed to be a plan?" Wade's flat
+  death sentence. Silence is a position, not an absence.
+- **Feelings about the topic** — interest, contempt, boredom,
+  reverence. A survival topic bores Faldo. It fascinates Cox.
+  It bores Keane in a different way. Those three boredoms look
+  nothing alike.
+- **Feelings about the specific people present** — affection,
+  rivalry, dismissal, awe. McNab and Ryan disagree by default.
+  Attenborough narrates the others as fauna. Mitchell is
+  visibly pained by Clarkson's existence.
+
+The content follows from this. When the people are modelled,
+humour inserts itself by **exaggerating the traits the audience
+already recognises** — the specific move, tell, or tic that
+makes the character who they are. The audience recognition is
+the laugh. The exaggeration is the craft. No model can invent
+this from scratch, because the recognition depends on pre-existing
+audience knowledge of the real person.
+
+**The test:** two calls on the same topic with the same panel
+should produce different conversations because the characters
+react differently to each other's specific moves — not because
+the model varies its output randomly. If the output varies
+without reference to who else is in the room, the model is
+generating content. If the output varies because Keane is
+contemptuous of Clarkson's existence and Mitchell is pedantically
+correcting Faldo's Augusta reference, the people are generating
+content. Only the second one is funny.
+
+**Implication for all downstream levers:** every sampled flavour,
+every named pattern, every interaction `reacts_to` field is
+building this reactive model. If a design choice doesn't change
+how a character reads another character in the room, it's decoration,
+not voice.
+
+---
+
 ## Lever 1 — Flavour banks, split into mannerisms and flavours
 
 Each character ships with structured data external to the prompt.
