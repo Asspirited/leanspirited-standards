@@ -209,6 +209,179 @@ megaprompt.
 
 ---
 
+## Lever 4 — Comedy mechanisms (what makes a line land)
+
+Levers 0–3 build the *people* and the *conversation graph*. Lever 4 names
+the specific output-level mechanisms that produce the laugh once the
+people are modelled and reacting. These are the moves to engineer toward
+and away from. Names below are canonical — use them in Three Amigos,
+Gherkin, and code comments.
+
+Worked example throughout: Cusslab 19th Hole, 2026-05-17. User prompt
+referenced Justin Thomas and a vulgar non-sequitur about salad. The four
+illustrative panel responses are referenced as Output 1–4.
+
+---
+
+### M-Mech-1 — Unwitting register (gold standard)
+
+**Shape:** the comedy lives entirely inside the character's own
+technical or professional vocabulary, applied to a subject the character
+is treating straight. The audience hears a double meaning the character
+does not. The character never acknowledges the double meaning.
+
+**Example (Output 3):** Faldo, on a vulgar tangent —
+*"Murray never committed to the finish position there, just pulled out
+early to see where it went. Now."*
+
+"Finish position" and "pulled out" are swing-coach terms doing filthy
+double duty entirely on the reader's side. Faldo is doing his actual job
+in his actual vocabulary. The mechanism stack is P5 obliviousness ×
+P2 mask-vs-truth × Goffman backstage leaking through frontstage *without
+the character's awareness*.
+
+**Test:** if you can remove the smutty interpretation by changing
+nothing in the line itself — only the surrounding subject — the line
+reads as plain professional speech. If it doesn't, the character is
+*telling* the joke instead of accidentally being it; M-Mech-1 is not
+firing.
+
+**Cannot be engineered prompt-side.** Requires pool, register, and
+topic-adoption to all be working such that the character will speak in
+their normal vocabulary about a subject the character would not normally
+discuss. This is the highest tier of character-voice purity and the
+rarest mechanism to produce. When it fires, the panel is doing what no
+other system can.
+
+---
+
+### M-Mech-2 — Signature move as displacement, never as filler
+
+**Shape:** the character's named tic (Alliss's "What. A. Statement.";
+Faldo's "Now."; Keane's silence-then-cutting-line) fires *only* when
+either (a) relevance-adds-weight — the line preceding it has just earned
+the emphasis, or (b) incongruity-displaces-context — the tic landing
+here is jarring in a way that re-frames what just happened. Default-fire
+is forbidden.
+
+**Failing example (Output 1):** Alliss, on the same vulgar tangent —
+*"...the great Walter Hagen himself. What. A. Statement."*
+
+The signature move fires by default after two paragraphs of inflation.
+It is not earning weight (the Hagen reach is the joke, not a Statement)
+and it is not displacing context (the cadence is exactly what the
+audience expects from an Alliss inflation arc). It is filler dressed as
+a tic.
+
+**Passing example (Output 3, same line as M-Mech-1):** Faldo's "Now."
+lands because the preceding clause has just been accidentally obscene,
+so the cheerful coaching cadence underneath a filthy double meaning is
+what makes it work. The "Now." displaces the obscenity by treating it as
+routine — the displacement is the laugh.
+
+**Test:** ask of every signature-move fire — "would this line still
+read as the character if the signature move were absent?" If yes, the
+move was filler and must be cut. If the move is doing real work, the
+line collapses without it.
+
+**Engineering implication:** signature-move firing must be gated on
+either a relevance score for the preceding clause or an incongruity
+score for the panel context. Never on cadence or turn position alone.
+
+---
+
+### M-Mech-3 — Cornered legalistic callback (ConspireEngine, fully expressed)
+
+**Shape:** under pressure (P9 lie_trigger fires — challenged, cornered,
+or wound-activated), the character escalates legalistically. The
+defence references a prior turn's detail — a callback — which the
+character now treats as load-bearing in a different way than it was
+originally introduced. Parenthetical emphasis ("and I mean *slightly*")
+is the lie-tell. The character is interrupted mid-defence by another
+panel member, who takes the next slot before the implosion completes.
+
+**Example (Output 4):** Faldo, three turns into a cornering —
+*"...the paper was a sandwich order, Butch, which is a different
+document entirely from pairings, and the commitment to the finish
+position was always there, it was the twelfth initial that was
+slightly — and I mean slightly — unclear at the bottom, which the
+format of the press conference made it difficult to—"*
+
+The callback ("the paper was a sandwich order") references an earlier
+turn. The legalistic structure ("different document entirely") is P9
+lie_style legalistic firing. The parenthetical emphasis is the tell.
+The em-dash hands the turn to another character mid-implosion, which
+lets the panel do the punishing rather than the character collapsing on
+their own.
+
+**Test:** four conditions, all required.
+1. Lie references a specific detail from a prior turn in this session.
+2. Defence is structurally precise, not emotional.
+3. A verbal tic of over-emphasis is present (italicised qualifier,
+   repeated word, redundant precision).
+4. Turn ends on an interruption — the character does not complete the
+   defence themselves.
+
+**Engineering implication:** the engine must (a) carry a session
+callback ledger so a character knows what they previously said and can
+re-reference it under pressure, and (b) wire interruption probability
+to lie-escalation state so the next slot is more likely to fire
+mid-defence. Both are panel-system properties, not prompt properties.
+
+---
+
+### M-Mech-4 — Wrong-noun deflation
+
+**Shape:** another character punctures an inflation by substituting a
+precisely wrong noun for the thing being inflated. The wrong noun is
+close enough to the original to land as a reframe, not a rejection. The
+follow-up is dry approval ("and one I admire enormously") rather than
+contempt — the deflation is delivered as if praising the wrong thing
+sincerely.
+
+**Example (Output 2):** Faldo, deflating Alliss's Hagen sermon —
+*"Hagen's thing wasn't preparation, Ewen — it was commitment to the
+wrong sauce entirely, which is a different discipline, and one I admire
+enormously."*
+
+"Wrong sauce" substitutes for "preparation" (the original inflation)
+with a noun rooted in the user's vulgar prompt about salad. The "one
+I admire enormously" carries the deflation home on a smile rather than
+a sneer.
+
+**Parasitic by design.** M-Mech-4 cannot carry independent weight — it
+requires a prior inflation to puncture. It is a *response* mechanism,
+not an *opener* mechanism. Lever 3's `reacts_to` must be populated
+with `register: deflation` for this turn or the connection breaks.
+
+**Test:** can you remove the prior turn and still have the line read as
+funny? If yes, it is not M-Mech-4 — it is something else (likely
+sincere misidentification). If no — if the line dies without its setup
+— the mechanism is firing correctly.
+
+---
+
+### Mechanism interaction map
+
+| Mechanism | Opener? | Response? | Requires prior callback? | System property? |
+|---|---|---|---|---|
+| M-Mech-1 (unwitting register) | yes | yes | no | character pool + topic-adoption |
+| M-Mech-2 (signature displacement) | rarely | yes | no | per-tic gating logic |
+| M-Mech-3 (cornered legalistic callback) | no | yes | yes | callback ledger + interruption wiring |
+| M-Mech-4 (wrong-noun deflation) | no | yes | yes (the inflation) | reacts_to register enum |
+
+---
+
+### Anti-mechanism — Signature move as default filler
+
+The Output 1 failure mode. Listed here so it has a name to call it by
+in review: **default-tic firing**. Whenever a signature move appears
+without earning its place via relevance or incongruity, raise a WL
+entry — this is voice debt and it dulls every future use of the same
+tic.
+
+---
+
 ## Anti-patterns
 
 - **Saltwater crocodile in Northumberland** — flavour unconstrained by locale. Bank must be locale-aware.
