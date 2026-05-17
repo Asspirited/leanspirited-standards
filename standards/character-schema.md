@@ -275,6 +275,7 @@ The flavour of lie this character produces.
 | `plausible_elaboration` | Sounds reasonable. Slightly too convenient. Cannot be disproved. |
 | `moral_authority` | Delivered as ethical principle. Unchallengeable. Rare and devastating. |
 | `enthusiastic_confabulation` | Wrong but totally sincere. Magnificent misplaced confidence. |
+| `incongruent_register` | Deliberate disguise: surface register does not match underlying intent. Audience reads both layers simultaneously. See M-Mech-9 in panel-voice-principles.md Lever 4. Two polarities (hostile-as-warm; warm-as-hostile). Properly fires at calibration levels L3–L5 only. Sustained disguise required — no mid-turn collapse to open hostility. |
 
 **lie_trigger** `string[]`
 Emotional states or interaction types that begin escalation.
@@ -300,6 +301,72 @@ Maximum absurdity this character reaches at threat level 3.
 One of: `plausible` `credible_stretch` `whopper` `utterly_ridiculous`
 Not all characters escalate to utterly_ridiculous.
 The ceiling is a hard cap — the engine never exceeds it regardless of threat level.
+
+---
+
+### P9 extension — `incongruent_register` sub-fields
+
+When `incongruent_register` appears in `lie_style[]`, the character ships
+with three additional sub-fields defining their disguise capability. These
+are the engine's gate on M-Mech-9 firing — without them, the mechanism
+cannot select a polarity, level, or motivation for that character.
+
+**incongruent_register.polarities** `enum[]`
+Which polarities this character can sustain.
+- `hostile_as_warm` — character has hostile intent, delivers in warm register
+- `warm_as_hostile` — character has warm intent, delivers in hostile register
+
+Most characters with the capability hold one polarity only. Rare characters
+(Boyle, Mystic) hold both. A character with `[]` cannot fire M-Mech-9.
+
+**incongruent_register.allowed_levels** `integer[]`
+Calibration levels (3–5) the character can sustain. See M-Mech-9
+calibration scale in `panel-voice-principles.md` Lever 4.
+- `3` — Ambiguous (universal sweet spot; both readings live simultaneously)
+- `4` — Speaker-exposing (praise reveals speaker's own flaws — attraction,
+  jealousy, insecurity, bad personality leaks)
+- `5` — Audience-visible mock (clearly trolling, naive target)
+
+Most characters hold a 2-level band (`[3, 4]` or `[4, 5]`). Sebastian-class
+characters hold all three (`[3, 4, 5]`). A character with `[]` cannot fire
+M-Mech-9.
+
+**incongruent_register.motivations** `string[]`
+Why this character disguises. One or more of:
+- `attraction_disguised` — over-supportive register driven by attraction
+  (typical level 4, exposes the speaker's crush)
+- `discomfort_creation` — make target uneasy through excessive support
+  (typical level 3–4)
+- `achievement_over_exaggeration` — make target seem so accomplished it's
+  mocking (typical level 4–5)
+- `status_undercut` — sustained sophisticated mock to lower target's status
+  (typical level 5)
+- `genuine_then_collapsing` — start sincere, drift to mock as patience runs
+  out (typical level 3 → 5)
+- `banter_as_affection` — warm intent disguised as hostility; insults that
+  are actually fondness (typical level 4–5, requires `warm_as_hostile`
+  polarity)
+- `disappointed_warmth` — warm intent delivered with bitter undertone of
+  letdown (typical level 4, requires `warm_as_hostile` polarity)
+
+Motivations must compose with the declared `polarities`. `banter_as_affection`
+and `disappointed_warmth` require `warm_as_hostile`. The other motivations
+require `hostile_as_warm`. The engine enforces this on data load.
+
+---
+
+**Validation (incongruent_register)**
+
+For any character with `incongruent_register` in their `lie_style[]`:
+
+- [ ] `polarities` is non-empty
+- [ ] `allowed_levels` is non-empty and contains only 3, 4, or 5
+- [ ] `motivations` is non-empty and every entry composes with at least
+      one declared polarity
+- [ ] Character's P5 Comic Mechanism is *not* `obliviousness` as primary
+      — oblivious characters cannot sustain deliberate disguise
+- [ ] Character's `voice_register` paragraph references the disguise
+      capability so prompt construction can prime it
 
 ---
 

@@ -437,6 +437,136 @@ with what they believe is the right answer, it is.
 
 ---
 
+### M-Mech-9 — Incongruent register (the disguise move)
+
+**Shape:** the character delivers a response whose *surface register* does
+not match their *underlying intent*, deliberately. The audience reads
+both layers — surface and intent — simultaneously; the gap between them
+is the comedy. Distinct from M-Mech-1 (unwitting register) because here
+the character knows what they are doing; distinct from M-Mech-4
+(wrong-noun deflation) because here the substitution is of the entire
+response register, not a single noun.
+
+**Two polarities:**
+- **Hostile-as-warm.** Character has hostile intent; delivers in warm /
+  supportive / endorsing register. Examples: Sebastian over-praising a
+  rival's idea to undercut it; Partridge complimenting someone he
+  resents; McGinley congratulating Faldo on something to highlight a
+  failure; Henni-if-attracted over-supporting a male golfer in a way
+  that exposes her own crush.
+- **Warm-as-hostile.** Character has warm intent; delivers in hostile /
+  insulting / mocking register. Examples: Roy mocking a mate he loves;
+  Boyle's friendly insults; Wayne and Butch's alleged-affection-through-
+  abuse; Pint of Harold's comedy of disappointed warmth.
+
+Both polarities are the same structural mechanism, mirrored.
+
+---
+
+### Calibration scale — M-Mech-9 properly fires at L3–L5
+
+The comedy lives in *sustained* incongruence. Pure warmth (L1–L2) is not
+M-Mech-9 firing; open hostility (L6–L7) is not M-Mech-9 firing — the
+disguise has collapsed and the line is just M-Mech-3, an expletive, or
+something else. **M-Mech-9 is the L3–L5 band where the disguise holds.**
+
+| Level | Name | Audience reads | Target perceives | M-Mech-9 firing? |
+|-------|------|----------------|------------------|------------------|
+| L1 | Genuine support | Pure warmth | Pure warmth | No |
+| L2 | Likely-genuine | Mostly warm, faint flag | Genuine | No |
+| **L3** | **Ambiguous** | Cannot tell — both readings live simultaneously | Probably genuine, slight unease | **Yes — universal sweet spot** |
+| **L4** | **Speaker-exposing** | Speaker's flaws visible *through* the praise (attraction, jealousy, insecurity, bad personality leaks) | Variable — may catch slowly | **Yes — character-specific** |
+| **L5** | **Audience-visible mock** | Clearly trolling, target naive | Target does not catch | **Yes — requires naive target** |
+| L6 | Open piss-take | Open mock | Target catches and reacts | No — collapses to M-Mech-3 |
+| L7 | Expletive | Direct hostility | Direct hostility | No — disguise gone |
+
+L3 is the universally-applicable sweet spot (Stewart Lee, British
+pass-agg). L4 is character-specific (only certain characters can
+self-expose plausibly — Brent, Partridge). L5 requires a naive target
+(engine must check target's audience-reading capacity).
+
+---
+
+### Motivations — the *why* behind the disguise
+
+Motivation enriches the level — it is *why* the character disguises,
+which determines *which level* they tend to occupy and *which polarity*
+they take.
+
+| Motivation | Typical level | Polarity | Cast examples |
+|------------|---------------|----------|---------------|
+| Attraction-disguised-as-praise | L4 | hostile-as-warm (jealousy) OR over-supportive | Henni-if-attracted, Mrs Doyle archetype, Mystic-with-psychic-crush |
+| Discomfort creation | L3–L4 | hostile-as-warm | Sebastian to lower-status, Partridge to anyone confident |
+| Achievement over-exaggeration | L4–L5 | hostile-as-warm | McGinley vs Faldo, Boyle to respected guest, Cox to perceived inferior |
+| Status undercut | L5 | hostile-as-warm | Sebastian to peer, Partridge to more successful colleague |
+| Genuine-then-collapsing | L3 drifting L5 | hostile-as-warm | Mystic when patience runs out |
+| Banter as affection | L4–L5 | warm-as-hostile | Roy with mates, Boyle to respected guest (positive variant) |
+| Disappointed warmth | L4 | warm-as-hostile | Pint of Harold |
+
+---
+
+### Character permission — three-dimensional capability
+
+Not every character can fire M-Mech-9. Capability is per-character and
+three-dimensional: `(allowed polarities) × (allowed levels) × (allowed
+motivations)`. A character with no permission produces flat or jarring
+output when forced into the mechanism.
+
+**Cannot disguise — too direct:** Souness, Diogenes, Roy (when not with
+known mates), Faldo (his lies are legalistic per P9, not register-
+disguising).
+
+**Cannot disguise — too earnest:** Bear Grylls, Big Ron (affection is
+genuine; contempt is just confusion), Wade (states a fact and moves on).
+
+**Cannot disguise — too oblivious:** Mystic mostly, Eccles-archetypes.
+
+**Can disguise — wide range:** Sebastian (L3–L5, hostile-as-warm),
+Partridge (L3–L4, hostile-as-warm, self-exposing), McGinley vs Faldo
+specifically (L3–L5, achievement over-exaggeration), Boyle (L4–L5, both
+polarities), Roy with known mates (L4–L5, warm-as-hostile).
+
+Character permission lives in P9 Lie Profile — see character-schema.md
+addition of `incongruent_register` as a `lie_style` option with sub-
+fields `polarity[]`, `allowed_levels[]`, `motivations[]`.
+
+---
+
+### Tests — M-Mech-9 firing correctly
+
+1. **Both readings live simultaneously in the audience.** If only one
+   reading is plausible, the mechanism is not firing — the line is just
+   warmth (L1–L2) or just hostility (L6–L7).
+2. **Character holds the disguise without breaking.** No "of course
+   I'm joking" tag; no mid-turn collapse to open hostility. The
+   incongruence is sustained for the duration of the turn.
+3. **Character has explicit P9 permission** for the polarity, level,
+   and motivation in play. Forcing M-Mech-9 on a character without
+   permission produces flat output that does not land.
+4. **Level matches character permission band.** A Partridge L5 reads
+   wrong; a Sebastian L3 reads under-developed; a Roy hostile-as-warm
+   reads off-cast.
+
+---
+
+### Engineering implications
+
+- Schema home: P9 Lie Profile extension. Add `incongruent_register` as a
+  new `lie_style` option. See character-schema.md.
+- Engine block: REVERENT ABSURDITY-style prompt block in
+  PanelDiscussEngine.buildSystemPrompt. Selects polarity + level +
+  motivation per turn from character's P9 permissions and current
+  panel temperature (Lever 5). Block instructs sustained incongruence,
+  forbids mid-turn collapse, names the target.
+- Regression check: pipeline samples for M-Mech-9 fires — verifies
+  character permission respected, verifies L3–L5 sustained (no drift
+  to L6+), verifies motivation matches expected character pattern.
+- Composes with Lever 5: M-Mech-9 firing moves the panel temperature
+  *congruence axis* toward INCONGRUENT. The calibration level
+  determines *how far*.
+
+---
+
 ### Mechanism interaction map
 
 | Mechanism | Opener? | Response? | Requires prior callback? | System property? |
@@ -446,6 +576,7 @@ with what they believe is the right answer, it is.
 | M-Mech-3 (cornered legalistic callback) | no | yes | yes | callback ledger + interruption wiring |
 | M-Mech-4 (wrong-noun deflation) | no | yes | yes (the inflation) | reacts_to register enum |
 | M-Mech-8 (reverent absurdity) | yes | yes | helpful, not required | prose-form cues + anti-irony instruction + connectable lore |
+| M-Mech-9 (incongruent register) | yes | yes | no | P9 character permission (polarity × level × motivation) + sustained-disguise gate |
 
 ---
 
