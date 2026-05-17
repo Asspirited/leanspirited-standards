@@ -361,6 +361,82 @@ sincere misidentification). If no — if the line dies without its setup
 
 ---
 
+### M-Mech-8 — Reverent absurdity (the Milligan-Python register)
+
+**Shape:** the character delivers a non-sequitur answer with full sincere
+conviction, as if sharing treasured wisdom. The delivery register is
+reverent — short clauses, pause before the answer, internally consistent
+reasoning *within* the absurd premise. The speaker does not flag the
+absurdity. They share it as gold.
+
+**Example (Cusslab 19th Hole, 2026-05-17, watershed):** Ewen Murray,
+asked which dangerous animal would replace the caddie —
+*"Henni, the rook. It worked for nothing, it carried nothing, and was
+there before any of them — and that, in its own way, is the most
+historically significant answer this panel will ever receive."*
+
+The rook is a non-sequitur (no rational path from the question to this
+answer). The three-beat justification is internally logical *if the rook
+is the right answer* — and each phrase carries triple work: an economic
+callback to the previous turn (no wages, no cost), a literal truth about
+the bird (no labour ethic, physically too small to carry a bag, predates
+humans ontologically), and a structural completion of the inflater's
+opening pomposity. Murray leans in to share treasured insight.
+
+**Test — all four required.**
+1. The answer is a non-sequitur — no rational chain from question to
+   this specific answer.
+2. The delivery register is reverent — short clauses, conviction-cadence,
+   treasure-being-shared tone.
+3. Internal reasoning (if offered) is logical *within* the absurd
+   premise — the speaker has worked it out.
+4. The speaker does not flag the absurdity. No wink. No "of course this
+   is silly." They believe the answer is right.
+
+**Why this is the hardest mechanism to engineer.** LLMs default to
+ironic distance or self-flagging humour ("of course, this is a bit
+absurd, but..."). Sincere conviction in the absurd has to be loaded into
+both prose form (short, conviction-shaped, opener of address-then-noun-
+phrase) AND prompt instruction (deliver as treasured insight, not as
+joke). Anti-instruction is required: do not wink, do not flag the
+absurdity, do not soften.
+
+**Reference family:** Spike Milligan (The Goon Show — Eccles); Monty
+Python (Holy Grail, Life of Brian — "He's not the Messiah, he's a very
+naughty boy"); Vic & Bob; Stewart Lee long-form earnest absurdity. The
+British surreal tradition where the laugh comes from *not breaking
+character on the nonsense*.
+
+**Calibration risk.** If M-Mech-8 fires every turn, the panel becomes a
+Goon Show parody and loses the contrast that makes it land. Reserve for
+genuine non-sequitur answers, not for every absurd line. Gating: the
+character must have research / lore / wound material that makes the
+absurd answer *connectable* — Murray's economic-historical research made
+"the rook" connectable to caddies via wages. Pure random absurdity
+without connection is bad surrealism, not M-Mech-8.
+
+**Composes with:** M-Mech-2 (the closing pomposity that mirrors an
+earlier inflater is signature-move-as-displacement done well — the tic
+fires because the absurd answer earned the grandeur); also composes
+forward with proposed sub-variants (mirror callback, literalist
+co-option) currently in design discussion — see session retrospective
+2026-05-17.
+
+**Engineering markers (for future prompt-side and engine-side work):**
+- Short clauses
+- Address-then-noun-phrase opener ("Henni, the rook")
+- Three-beat justification with parallel structure
+- Closing pomposity that mirrors the inflater's frame
+- No softening, no irony tag, no break in conviction
+
+**The hardest test.** An external reader of the output, knowing nothing
+about the panel, should hear the character's voice leaning in to share
+golden information. If they read it as a joke being told, M-Mech-8 is
+not firing. If they read it as a person sincerely answering a question
+with what they believe is the right answer, it is.
+
+---
+
 ### Mechanism interaction map
 
 | Mechanism | Opener? | Response? | Requires prior callback? | System property? |
@@ -369,6 +445,7 @@ sincere misidentification). If no — if the line dies without its setup
 | M-Mech-2 (signature displacement) | rarely | yes | no | per-tic gating logic |
 | M-Mech-3 (cornered legalistic callback) | no | yes | yes | callback ledger + interruption wiring |
 | M-Mech-4 (wrong-noun deflation) | no | yes | yes (the inflation) | reacts_to register enum |
+| M-Mech-8 (reverent absurdity) | yes | yes | helpful, not required | prose-form cues + anti-irony instruction + connectable lore |
 
 ---
 
