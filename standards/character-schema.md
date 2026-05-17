@@ -109,6 +109,22 @@ Define:
 - Primary mechanism (one from above or name a new one)
 - The specific form it takes in their voice
 - What it looks like at low intensity vs high intensity
+- **gricean_violation** (optional but recommended) — array naming which of Grice's four cooperative-conversation maxims this character specialises in flouting. Comedy is, in large part, productive maxim violation; per-character flout specialism is what makes panels distinct and prevents flout-monoculture (every character flouting the same maxim flattens the panel).
+
+The four maxims and what flouting each produces:
+
+| Maxim | What it requires | Flouting produces |
+|-------|------------------|-------------------|
+| `quantity` | Say no more, no less, than needed | Silence (under-say) or filibuster (over-say). Ray Mears, Wade — quantity-under specialists; Murray, Cox — quantity-over specialists |
+| `quality` | Don't say what you believe false; have evidence | Lies, embellishment, sincere wrongness. Faldo legalistic; Bear enthusiastic-confabulation; the M-Mech-8 reverent-absurdity "Henni, the rook" |
+| `relation` | Be relevant | Non-sequitur, topic-pivot, free association. Murray reaching for the corvid magnet; Cox's cosmic frame applied to a Q3 projection |
+| `manner` | Be brief, orderly, unambiguous | Legalistic precision, elaborate construction, opacity. Faldo precision around documents; Diogenes archaic constructions; Partridge over-precision |
+
+A character may specialise in flouting one maxim, two, or (rarely) three. Four-maxim violators are usually incoherent — they read as broken, not funny. The specialism interacts with P1 wound (the wound often determines *which* maxim is flouted) and P9 lie_style (especially for quality and manner specialists).
+
+**Flout-monoculture risk:** if every active panellist flouts the same maxim, panel reads as one-note. Quantity-balance across the cast is the design discipline. (Pipeline regression check: see BL-184 measurement instrumentation suite.)
+
+Reference: Grice's *Logic and Conversation* (1975); stand-up comedy as systematic Quality flouting documented in multiple studies. M-Mech-8 reverent absurdity is *simultaneous Quality + Relation flouting*, sustained.
 
 ### P6. Relational Hunger
 What they need from the room.
@@ -703,6 +719,7 @@ It is never injected into prompts.
 Before committing any character:
 
 - [ ] All 8 psychological dimensions complete
+- [ ] P5 gricean_violation specialism named (optional but recommended; supports BL-184 measurement of flout-monoculture)
 - [ ] All 9 mechanical connections complete
 - [ ] Pre-existing relationships defined for every active panel member
 - [ ] YOUR STATE example written at neutral and hostile
