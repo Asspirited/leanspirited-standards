@@ -360,7 +360,225 @@ Different shadows produce different panel effects.
 
 ---
 
-## Theoretical Profile (validation layer — not runtime)
+## P11 — Topic Magnets (runtime generative)
+
+Every character's mind keeps returning to a small set of subjects regardless
+of what is being asked. These are *topic magnets* — gravitational fields
+that pull answers toward themselves and supply the *connecting tissue* a
+character uses to thread their own material through any prompt. Magnets
+are how a character stays *themselves* across a turn instead of trailing
+off into reaction to others.
+
+Magnets are distinct from Lever 1 flavour banks
+(see `panel-voice-principles.md` Lever 1). Flavour banks ensure *variation
+per call* (do not repeat "Borneo" every time). Magnets ensure *character
+continuity across calls* (Murray keeps pulling toward corvids regardless
+of question). They compose: a magnet promotes a subset of the flavour bank
+to above-baseline frequency in non-obvious answer slots.
+
+Magnets are the upstream generator of M-Mech-8 polysemy
+(`panel-voice-principles.md` Lever 4). When an absurd answer feels
+*over-determined* — when the audience generates multiple plausible
+reasons the character chose it (fascination, wisdom, defiance,
+inattention) — what they are sensing is the hidden magnet pulling the
+answer. The reverent delivery of M-Mech-8 frames the answer; the magnet
+generates it.
+
+The audience senses the magnet across many turns. The character does not
+name it. This is the David Brent / Alan Partridge / Eccles mechanic —
+the hidden through-line the character cannot help revealing while
+pretending otherwise.
+
+**Required for every character. Three to five magnets each.**
+
+---
+
+**magnets** `array of magnet objects`
+The character ships with 3–5 magnets. Fewer than 3 = under-determined
+character voice. More than 5 = magnets dilute each other and the audience
+cannot identify any of them.
+
+Each magnet object has:
+
+**magnet.topic** `string`
+Noun-phrase identifying the magnet. Specific enough to be recognisable,
+general enough to cover the whole magnetic field. Examples:
+- "corvids and the blackbird family" (Murray)
+- "savoury pastry, specifically Ginsters" (Faldo)
+- "courage and the absence of it" (Souness)
+- "cosmic timescale and physical inevitability" (Cox)
+- "power as framework" (Sebastian)
+- "Roman and Greek antiquity" (Diogenes)
+
+**magnet.anchor_items** `string[]` (6–12 entries)
+The concrete examples the magnet pulls toward. These are the *referenceable
+nouns* a character will surface when the magnet fires. For Murray's corvid
+magnet: rook, crow, raven, jackdaw, magpie, chough, hooded crow, treepie.
+For Faldo's pastry magnet: Ginsters, sausage roll, Cornish pasty, pork pie,
+Greggs, scotch egg, Melton Mowbray. Anchors are the magnet's vocabulary.
+
+**magnet.magnetic_strength** `enum`
+How strongly the magnet pulls.
+- `subtle` — surfaces in 1 of every 6–8 turns, often as connecting tissue
+- `moderate` — surfaces in 1 of every 3–5 turns, as chosen example or
+  unprompted reference
+- `obsessive` — surfaces in 1 of every 2–3 turns, often as the
+  over-determined answer itself
+
+A character should have at most one `obsessive` magnet — more than one
+obsessive magnet competes for the same slots and dilutes both.
+
+**magnet.surface_form** `enum[]`
+How the magnet appears in output. One or more of:
+- `chosen_examples` — when picking an example to illustrate a point, the
+  example comes from the magnet's anchor items
+- `connecting_tissue` — magnet supplies the middle of a turn, threading
+  the character's own material between opener and closer
+- `unprompted_reference` — magnet surfaces even when no prompt cue exists
+- `over_determined_answer` — magnet *is* the answer (the M-Mech-8 case)
+
+**magnet.acknowledgement_rule** `enum`
+What happens if the magnet is named by another character or the audience.
+- `never` — character has no awareness; cannot acknowledge even if asked
+- `denies_when_called_out` — character is dimly aware but actively
+  denies the fixation ("nonsense, I have no special interest in [topic]")
+- `if_directly_asked` — character will confirm if cornered, but never
+  volunteers
+
+`never` and `denies_when_called_out` are funnier than `if_directly_asked`.
+Use `if_directly_asked` sparingly.
+
+**magnet.audience_recognition** `enum`
+How quickly the audience identifies the magnet.
+- `yes_obvious` — audience identifies within 2–3 turns (running gag)
+- `yes_subtle` — audience identifies after 5–10 turns (slow-burn)
+- `discovered_through_play` — only frequent users notice; rewards repeat play
+- `hidden_indefinitely` — never explicitly visible; provides texture without
+  recognition (rare, advanced use)
+
+Match to the character's other attributes — a character with `obsessive`
+magnetic strength almost always has `yes_obvious` recognition; a
+`subtle` magnet often has `discovered_through_play`.
+
+**magnet.composes_with** `string[]`
+Other character schema attributes this magnet leverages. Magnets are most
+powerful when they connect to:
+- `P1 Wound` — magnet topic is the displacement of an unhealed event
+  (Faldo's Ginsters magnet displaces his 1996 Masters collapse: he reaches
+  for food as comfort)
+- `P5 Comic Mechanism` — magnet supplies the material the mechanism acts
+  on (Cox's cosmic-timescale magnet is the material his
+  hollow-performance mechanism inflates)
+- `P6 Relational Hunger` — magnet may signal what the character needs
+  (Sebastian's power-as-framework magnet signals authority hunger)
+- `M8 YOUR STATE Voice` — magnet appears as what the character *notices*
+  in their internal monologue
+- `P10 Shadow Register` — magnet may bridge primary register and shadow
+
+---
+
+### Worked example: Ewen Murray (Golf 19th Hole)
+
+```yaml
+magnets:
+  - topic: "corvids and the blackbird family"
+    anchor_items: [rook, crow, raven, jackdaw, magpie, chough, hooded crow, treepie]
+    magnetic_strength: moderate
+    surface_form: [chosen_examples, over_determined_answer]
+    acknowledgement_rule: never
+    audience_recognition: discovered_through_play
+    composes_with: [P5 Comic Mechanism, M8 YOUR STATE Voice]
+
+  - topic: "Prestwick and pre-1900 golf history"
+    anchor_items: [Prestwick 1860, Young Tom Morris, Old Tom Morris, hickory shafts, gutta-percha, 12-hole course, the eight-man field, Carnoustie 1850s]
+    magnetic_strength: obsessive
+    surface_form: [chosen_examples, connecting_tissue, unprompted_reference]
+    acknowledgement_rule: if_directly_asked
+    audience_recognition: yes_obvious
+    composes_with: [P1 Wound, P5 Comic Mechanism]
+
+  - topic: "economic specificity, especially Victorian wage data"
+    anchor_items: [fourpence a round, ha'penny per hole, sixpence stake, shilling commission, half-a-crown, guineas, in coin and not in promises]
+    magnetic_strength: moderate
+    surface_form: [connecting_tissue, over_determined_answer]
+    acknowledgement_rule: never
+    audience_recognition: yes_subtle
+    composes_with: [P5 Comic Mechanism, M8 YOUR STATE Voice]
+```
+
+Murray's "Henni, the rook" watershed (2026-05-17) is two magnets firing
+simultaneously: the corvid magnet supplies the answer; the wage-data magnet
+supplies the connecting tissue ("worked for nothing, carried nothing"). The
+historical-Prestwick magnet supplies the closing pomposity. Three magnets
+in one turn produced the M-Mech-8 watershed.
+
+---
+
+### Tests — magnet is valid only if:
+
+1. **Anchor items list ≥ 6.** Fewer than 6 concrete items is a vague
+   preference, not a magnet. The magnet needs vocabulary to surface
+   variably.
+2. **`acknowledgement_rule` is documented.** Without this rule, the
+   model may break the magnet by explicit naming. Default `never` unless
+   the comedy specifically needs the character to deny it.
+3. **`composes_with` lists at least one other attribute.** A magnet
+   that does not compose with the character's wound, mechanism, or
+   relational hunger is decorative — it adds vocabulary without adding
+   character. Cut or rework.
+4. **Surface form matches the character's comic mechanism.** P5 hollow
+   performance pairs naturally with `chosen_examples` (the character
+   produces magnet-aligned examples to illustrate inflation). P5
+   obliviousness pairs with `unprompted_reference` (the character
+   surfaces the magnet at irrelevant moments). P5 compulsion pairs with
+   `over_determined_answer`.
+5. **At most one `obsessive` magnet per character.** Two obsessive
+   magnets compete for the same generation slots and the audience cannot
+   identify either.
+
+---
+
+### Anti-patterns
+
+- **Magnet explicitly named by the character.** "I have an unusual
+  interest in corvids" breaks the magnet. The character must never
+  describe their own magnet — only deny it (if rule allows) or remain
+  oblivious.
+- **Magnet without composition.** A vocabulary list with no connection
+  to wound, mechanism, or hunger is decoration. Remove or compose.
+- **Magnet too narrow.** "Rooks" is too narrow; "corvids and the
+  blackbird family" is right. The magnet must have generative range.
+- **Magnet too broad.** "Birds" or "history" or "food" is too broad —
+  the audience cannot identify a pull toward generic categories. The
+  magnet must be specific enough to be sensed.
+- **Magnet shared verbatim across characters.** Each character's magnets
+  must be theirs. If two characters share a magnet, they have shared
+  voice — see WL-131, BL-176. Magnets reinforce character separation;
+  shared magnets dissolve it.
+
+---
+
+### Pipeline / regression check (engine implication)
+
+Across N sampled responses per character:
+- Each magnet should appear *at or above* its expected frequency
+  (presence check based on `magnetic_strength` enum).
+- No magnet topic should be named explicitly by the owning character
+  (the noun-phrase identifier itself must not appear in character speech
+  unless `acknowledgement_rule = if_directly_asked` and the prompt
+  directly asks).
+- No magnet should be shared verbatim across characters (separation
+  check — flags bleed).
+- For each turn where a magnet surfaces, the magnet must connect
+  causally to the prompt or to the prior turn (literalist coherence —
+  pure random surfacing is bad surrealism, not topic-magnet polysemy).
+
+Failure on any of these is a P11 regression. Add to BL-176 v0 audit
+scope when it lands.
+
+---
+
+
 
 This section validates the character against established models.
 It lives in characters-theory.md not in the character voice file.
@@ -426,6 +644,9 @@ Before committing any character:
 - [ ] P9 lie_ceiling set and does not exceed character's dramatic register
 - [ ] P10 shadow_register defined if shadow present (optional section)
 - [ ] P10 shadow_acknowledged.self and .panel set explicitly if shadow present
+- [ ] P11 magnets defined — 3 to 5, each with ≥6 anchor items, `acknowledgement_rule` and `composes_with` populated
+- [ ] P11 at most one `obsessive` magnet
+- [ ] P11 no magnet shared verbatim with any other character (BL-176 / WL-131 compliance)
 - [ ] Pool has minimum 6 entries per dimension
 - [ ] "Never says / says instead" pair written and tested
 - [ ] Comic mechanism demonstrated in at least 3 example responses
