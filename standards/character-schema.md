@@ -661,6 +661,230 @@ scope when it lands.
 
 ---
 
+## P12 / P13 / P14 — Panel Response Modes (DRAFT — Three Amigos pending)
+
+> **Status:** DRAFT proposal, raised 2026-05-19 (BL-217). Derived empirically from
+> ~90 character files already using these fields under BL-194/205/206. Enum
+> values reflect observed usage frequency, not a priori design. Three Amigos
+> ratification required before promoting to canonical. Until ratified, character
+> files should continue to follow the inline patterns established by Track F /
+> Track G / primary-session ships; this section documents the patterns rather
+> than constraining new ones.
+
+These three fields configure how a character responds to a panel turn that
+their interlocutor has either left for them to address (P12 HANG MODE — the
+option to leave it hanging instead of responding), that the room is about to
+let drift somewhere unproductive (P13 SHUTDOWN CAPABILITY — moderating
+instinct), or that the engine has selected for an off-topic dismissal
+(P14 DISMISSAL PROFILE — flavour-typed phrase pool). Together they govern the
+character's non-default response repertoire.
+
+---
+
+### P12. HANG MODE (BL-206)
+
+Whether the character can leave the prior turn hanging — silence-as-response,
+or a sideways redirect that does not engage the substance — and under what
+conditions.
+
+**Fields:**
+
+- **can_leave_hanging:** boolean. Whether the character can EVER refuse to
+  engage a slot allocated to them by deploying silence or sideways move
+  instead of substance. Per observed cohort (90 chars): ~35 true, ~55 false.
+  False is the default for most narrative-engaged characters; true is reserved
+  for characters whose voice profile makes silence-as-deflation a load-bearing
+  comic mechanic (deadpan operators like Radar, dual-register inhabitants
+  like Phil Taylor, presenters whose role tolerates a beat like Henni).
+
+- **hang_triggers:** array of enum. Required if `can_leave_hanging: true`.
+  Which kinds of prior-turn pressure permit the hang. Observed enum:
+  - `discomfort` — the prior turn has put a target in a place the character
+    will not amplify by engagement
+  - `rhetorical` — the prior turn was a rhetorical-question / display-piece
+    that does not require a substantive answer
+  - `cruelty` — the prior turn crossed a cruelty line the character will not
+    legitimise by joining
+  - `insanity` — the prior turn was unhinged-claim territory where engagement
+    would dignify the claim
+
+- **hang_reactions:** array of enum. Required if `can_leave_hanging: true`.
+  How the hang surfaces in delivery. Observed enum:
+  - `audible_pause_then_continue` — a documented pause beat, then the
+    character moves on (the deadpan default; ~13 chars use this alone)
+  - `tumbleweed_marker` — the room registers the silence as a comic beat
+    (often paired with audible_pause_then_continue — ~9 chars)
+  - `brief_redirect` — one-sentence sideways move that does not engage
+    substance ("Anyway —")
+  - `pivot_to_new_topic` — substantive new-direction move (the producer-eye
+    redirect; presenter-shaped)
+
+---
+
+### P13. SHUTDOWN CAPABILITY (BL-205)
+
+Whether the character has the instinct AND the standing to moderate the room
+mid-turn — interrupting before harm lands, redirecting before tangents
+solidify. Distinct from P12 (which is about declining their own slot);
+shutdown is about reshaping someone else's.
+
+**Fields:**
+
+- **shutdown_capability:** enum `{ high | medium | low }`. Observed cohort
+  distribution: high (12), medium (32), low (46).
+  - `high` — the character actively moderates; reserved for presenters
+    (Henni, Cox), hosts (Sun Tzu in Little Misadventure), and characters
+    whose voice rests on controlling the room
+  - `medium` — moderation available but not default; deploys when motivation
+    triggers
+  - `low` — moderation not in repertoire; character either continues their
+    own register or defers to anchor
+
+- **shutdown_motivations:** array of enum. Required if
+  `shutdown_capability >= medium`. Why the character would deploy the
+  shutdown. Observed enum:
+  - `taste` — the prior turn breached the character's aesthetic / register
+    standards (the Augustan disapproval, the Etonian polite-but-firm) — most
+    common (13 chars use this alone, 13 paired with target_protection)
+  - `target_protection` — the prior turn was about to harm a specific other
+    character; shutdown protects the target
+  - `madness_control` — the room is escalating toward unhinged territory and
+    the character closes it down (hosts and presenters)
+  - `self_protection` — the prior turn was about to expose the character
+    themselves; shutdown is the deflection (rare — only 2 chars use alone)
+
+---
+
+### P14. DISMISSAL PROFILE (BL-194)
+
+Phrase pools the engine selects from when the panel slot needs a topic
+dismissal (off-topic tangent reached the cap; egging-on subject exhausted;
+the room has moved on but a character has been allocated to formally close
+the prior thread). Distinct from P12 / P13: dismissal is explicit verbal
+closure, not silence or moderation.
+
+**Fields:**
+
+- **dismissal_profile:** object containing three string-array sub-pools:
+  - **polite_but_funny:** softening dismissal — surface warmth, substance
+    is "we are moving on" (most common register; the Augustan / the deadpan-
+    warm / the presenter-grace)
+  - **cold_dismissal:** flat dismissal — direct closure without softening
+    (Souness / Boycott / Roy Keane register)
+  - **piss_take:** dismissal-via-mockery — closure that includes a dig at
+    the subject or the off-topic content itself (the Boyle / Radar / Cox
+    register; rare among characters whose voice tolerates it)
+
+**Pool entry rules (BL-212):**
+
+1. Entries are speakable strings. The engine renders them as character
+   speech.
+2. Bracketed stage-direction prefixes / suffixes are permitted IF the entry
+   also contains speakable content: e.g. `"[sigh] [chuckle] Quite
+   extraordinary..."` (acceptable). Pure stage-direction entries are NOT
+   permitted: e.g. `"[silence — does not look up — has another drink]"`
+   (disallowed; non-response mechanics belong in P12 HANG MODE, not P14).
+3. Pool size minimum: 3 entries per pool per the BL-194 convention,
+   expandable to 6+ for characters whose voice is dismissal-rich. Lever 1's
+   floor of 6 entries does not strictly apply here because dismissal pools
+   fire less often than primary voice pools.
+
+**Pool-omission semantic (BL-213):**
+
+- A pool present with `[]` (empty array) signals "this character does NOT
+  use this flavour". Engine must NOT fall back to a default phrase pool.
+  Example: McGinley deliberately has `polite_but_funny: []` and
+  `piss_take: []` because those flavours do not fit his voice.
+- A pool absent entirely (the whole sub-key omitted) signals the same:
+  engine treats it as `[]`.
+- A character with NO `dismissal_profile` block at all signals "this
+  character does not deploy explicit dismissals" — engine routes any
+  dismissal-required slot to an alternative mechanism (hang mode if
+  available, anchor handoff, or skip). BL-218 raised the no-block-vs-all-
+  empty-arrays question for Three Amigos.
+
+---
+
+### Worked example: Henni Koyack (Golf 19th Hole)
+
+```yaml
+# P12 HANG MODE
+can_leave_hanging: true
+hang_triggers: [discomfort, rhetorical, cruelty]
+hang_reactions: [brief_redirect, pivot_to_new_topic]
+
+# P13 SHUTDOWN CAPABILITY
+shutdown_capability: high
+shutdown_motivations: [taste, madness_control, target_protection]
+
+# P14 DISMISSAL PROFILE
+dismissal_profile:
+  polite_but_funny:
+    - "Mm — fascinating, but perhaps for another time. Back to the question."
+    - "I'll come back to that. Right now —"
+  cold_dismissal:
+    - "Different question. Move on."
+    - "No. The original ask was —"
+  piss_take: []  # presenter-warmth excludes piss-take register
+```
+
+Henni is the canonical full-stack P12/P13/P14 example: high shutdown
+(presenter standing + all three motivations), permissive hang (presenter
+beat tolerance with three triggers), strong polite/cold dismissal pools,
+piss_take deliberately empty per voice profile.
+
+---
+
+### Validation tests — P12/P13/P14 entry is valid only if:
+
+1. **`can_leave_hanging: true` characters have both `hang_triggers` and
+   `hang_reactions` populated** with at least one enum value each. A
+   `true` character with empty arrays is malformed.
+2. **`shutdown_capability >= medium` characters have `shutdown_motivations`
+   populated** with at least one enum value.
+3. **`shutdown_capability: low` characters MAY omit `shutdown_motivations`**
+   — the engine will not invoke shutdown for them regardless.
+4. **`dismissal_profile` pool entries respect the speakable-string rule
+   (BL-212)** — pure stage directions disallowed.
+5. **Empty arrays mean SKIP, not FALLBACK (BL-213)** — engine
+   implementations must honour this.
+6. **Enum values constrained to the observed sets** — any new value
+   proposed requires Three Amigos before adding to the schema enum.
+
+---
+
+### Anti-patterns
+
+- **`can_leave_hanging: true` without specified triggers.** The hang fires
+  on every turn — the character becomes mute.
+- **`shutdown_capability: high` without motivations.** The character
+  interrupts indiscriminately — moderation becomes obstruction.
+- **Dismissal pool duplicating P6 setpiece phrasings verbatim** — risks
+  repetism between active-turn deployment and dismissal deployment in the
+  same session. Either replace, or document the recycling as deliberate
+  voice-coherence (BL-211).
+- **Dismissal pool ALL-CAPS throughout to mirror a volume tic** — risks
+  fatigue (BL-220 raised on Matt Chapman). Capitalisation should fire
+  selectively, not as default.
+- **Adding new enum values inline in character files without schema
+  update** — drift risk. Surface to BL-217 / extend this section before
+  shipping the value.
+
+---
+
+### Pipeline / regression check (engine implication)
+
+- A new M-7-equivalent script could validate every character file against
+  the rules above (enum membership, required fields conditional on other
+  fields, speakable-string rule). Not yet implemented — raised
+  proactively as part of BL-217 future scope.
+- M-4 (mech-calibration-drift.js) already validates P9 incongruent_register
+  sub-fields; the same pattern extends to P12/P13/P14.
+- The BL-212 stage-direction rule needs an automated check — currently
+  audited manually (one violation found across 91 files: Radar's pre-fix
+  entry).
+
+---
 
 
 This section validates the character against established models.
