@@ -590,6 +590,269 @@ tic.
 
 ---
 
+## Lever 5 — Panel Temperature
+
+Levers 0–3 build the people and the conversation graph. Lever 4 names
+the per-line mechanisms that produce the laugh. Lever 5 is the per-panel,
+per-turn *bias* the engine applies to which Lever 4 mechanisms fire and
+how often. It is not a vibe and it is not a mood word. It is a numeric
+delta on mechanism selection rates, computed per panel and updated per
+turn, and it composes with — never replaces — everything in Levers 0–4.
+
+The design rule that bounds the whole lever: **temperature biases
+existing mechanisms; it never creates new ones.** A panel running HOT
+is firing the same M-Mech-3 / M-Mech-5 / M-Mech-9 the cast already
+ships with — just more of them, weighted differently. If a proposed
+temperature effect cannot be expressed as a delta on a named mechanism's
+firing rate, it does not belong in Lever 5.
+
+---
+
+### The two-axis model (v1)
+
+Temperature is two continuous axes, each clamped to the range
+**-1.0 to +1.0**:
+
+- **Axis 1 — HOSTILE ↔ WARM** (relational intent). What the panellists
+  actually feel toward each other this turn. Negative is hostile,
+  positive is warm, zero is neutral.
+- **Axis 2 — CONGRUENT ↔ INCONGRUENT** (surface vs intent). Whether
+  the surface delivery matches the underlying intent. Negative is
+  incongruent (disguise present), positive is congruent (surface
+  matches intent), zero is neutral.
+
+The two axes produce four quadrants the cast actually occupies:
+
+| Quadrant | Intent | Congruence | Reads as | Cast exemplars |
+|---|---|---|---|---|
+| Open hostility | HOSTILE | CONGRUENT | They mean it and they mean it openly | Souness, Diogenes |
+| Performative warmth | HOSTILE | INCONGRUENT | Warm surface, hostile intent — M-Mech-9 hostile-as-warm | Sebastian, Partridge, McGinley vs Faldo |
+| Open warmth | WARM | CONGRUENT | They mean it kindly | Bear earnest, Big Ron affectionate |
+| Banter as affection | WARM | INCONGRUENT | Hostile surface, warm intent — M-Mech-9 warm-as-hostile | Roy with mates, Boyle's friendly insults |
+
+Other dimensions that come up in design discussion — FORMAL/CHAOTIC,
+STATUS, COLLABORATIVE/COMPETITIVE — are **not** Lever 5 axes in v1.
+They are already cast-encoded: P3 Voice and Status Register, P5 Comic
+Mechanism, M7 Pre-Existing Relationships. Adding them as runtime dials
+would duplicate cast data and create two sources of truth. Resist.
+
+---
+
+### Panel-level starting position
+
+Each panel ships with a default temperature on both axes. The default
+is not arbitrary — it falls out of cast composition. A panel of
+McGinley + Faldo + Souness cannot start at +0.5 WARM without lying about
+the cast. A panel of Bear + Big Ron cannot start at -0.6 HOSTILE for
+the same reason.
+
+Starting positions for the current panels:
+
+| Panel | Intent (HOSTILE ↔ WARM) | Congruence (INCONGRUENT ↔ CONGRUENT) | Rationale |
+|---|---|---|---|
+| 19th Hole (Golf) | -0.6 | 0.0 | Souness ↔ McGinley, Faldo ↔ many; congruence neutral — some legalistic, some open |
+| Comedy Room | +0.4 | -0.3 | Comedians like each other; banter-as-affection is the room's default |
+| Boardroom | -0.2 | -0.5 | Cool intent; performative warmth is the boardroom norm |
+| House Name Oracle | +0.7 | 0.0 | A panel built to help; no disguise required |
+| Long Room | +0.3 | 0.0 | Old men, shared affection for the game, plain speech |
+
+Defaults are reviewed when cast changes. A new panellist with a strong
+relational pull (Roy joining a previously polite panel) shifts the
+default; the engine does not lag behind cast reality.
+
+---
+
+### Within-session drift
+
+Temperature is not static for the session. It shifts in response to
+specific in-conversation events, accumulates across the session, and
+resets at the next session start. Drift is **bounded**: temperature
+cannot exceed [-1.0, +1.0] on either axis regardless of how many
+shift events fire.
+
+The triggers and their direction:
+
+- **Wound activated** (P1 fires for any panellist) → shift toward HOSTILE.
+- **Genuine moment / shared laugh** → shift toward WARM.
+- **Round-count progression** — character-specific arcs encoded against
+  the panellist (Souness arc: starts WARM-leaning, drifts HOSTILE by
+  rounds 4–5; Bear holds WARM regardless).
+- **Cross-character parody landing** (BL-175 mechanism) → WARM shift —
+  the room recognised the bit, the room is together.
+- **Cornered legalistic callback fires** (M-Mech-3) → HOSTILE shift.
+  The defence was pressured into existing; the heat is now on the record.
+- **M-Mech-9 fires** → congruence axis moves toward INCONGRUENT.
+  Magnitude is proportional to the firing calibration level (L3 = small
+  shift; L5 = large shift). The intent axis is *not* directly affected
+  — disguise can sit on top of warm or hostile intent equally.
+- **Hang mode fires** (BL-180 — sustained silence by one panellist as a
+  weapon) → HOSTILE shift. The silence was hostile; the panel reads it.
+- **Panel consensus against a target** (BL-189) → HOSTILE shift, with
+  the target marked as the recipient for downstream M-Mech-5
+  (third-person address) bias.
+
+Drift magnitudes are per-trigger constants the engine carries; v1
+calibration is "small enough that one event does not flip a panel,
+large enough that three events visibly do." Specific values land with
+engine integration.
+
+---
+
+### Mechanism bias table
+
+The operational heart of Lever 5. Each row gives a per-mechanism delta
+applied per unit of temperature, on each axis independently. At
+generation time the engine computes:
+
+```
+firing_rate(mechanism) = base_rate(mechanism)
+                       + (intent_axis_value × intent_delta)
+                       + (congruence_axis_value × congruence_delta)
+```
+
+Sample values for v1 — engineer calibrates against pipeline output:
+
+| Mechanism | HOSTILE intent | WARM intent | INCONGRUENT congruence | CONGRUENT congruence |
+|---|---|---|---|---|
+| M-Mech-3 cornered legalistic | +0.3 | -0.3 | 0 | 0 |
+| M-Mech-3b lexical callback as branding | +0.2 | 0 | +0.1 | 0 |
+| M-Mech-3c self-classifying disclaimer | +0.3 | 0 | +0.2 | 0 |
+| M-Mech-4 wrong-noun deflation | 0 | +0.2 | +0.1 | 0 |
+| M-Mech-4b wrong-register deflation | 0 | +0.2 | +0.1 | 0 |
+| M-Mech-5 third-person address of present party | +0.4 | -0.2 | +0.2 | 0 |
+| M-Mech-6 mirror callback | -0.2 | +0.3 | 0 | 0 |
+| M-Mech-7 literalist co-option | -0.2 | +0.3 | 0 | 0 |
+| M-Mech-9 incongruent register | 0 | 0 | +0.5 | -0.5 |
+| M-Mech-1 unwitting register | 0 | 0 | 0 | 0 (firing-rate-agnostic; reading-mode-coloured) |
+| M-Mech-8 reverent absurdity | 0 | 0 | 0 | 0 (firing-rate-agnostic; reading-mode-coloured) |
+
+Convention: a mechanism without an explicit bias entry defaults to 0
+on both axes. It fires at base rate regardless of temperature
+(mode-agnostic). M-Mech-3b/3c/4b are forthcoming Lever 4 sub-variants
+currently in design — table reserves their rows so engine wiring lands
+in one place when they ship.
+
+The sign convention matters: HOSTILE and INCONGRUENT are *negative*
+on their axes, so a +0.3 HOSTILE delta with an intent value of -0.6
+produces a *negative* contribution (-0.18) that the engine *adds* to
+base rate. Sign discipline is enforced at engine boundary, not in this
+table — the table reads as "this mechanism likes this end of the axis."
+
+---
+
+### Reading-mode-coloured mechanisms
+
+Two mechanisms — M-Mech-1 (unwitting register) and M-Mech-8 (reverent
+absurdity) — sit outside the firing-rate bias system. They fire at
+their base rate regardless of temperature. But the audience *reads*
+them through the current temperature lens, and the reading shifts with
+no engine cost.
+
+M-Mech-8's "Henni, the rook" answer in a HOSTILE-mode panel reads as
+cold dismissal of the asker — the rook is a non-answer chosen to refuse
+the question. The same line in a WARM-mode panel reads as shared
+whimsy — the rook is offered as a small gift to the room. The line
+itself is unchanged. The firing rate is unchanged. The audience reading
+flips because the temperature context flips.
+
+This is the elegant nuance and the reason the bias table for M-Mech-1
+and M-Mech-8 is zeroed. They are not temperature-neutral; they are
+*temperature-coloured*. The colour comes from the surrounding state,
+not from a bias on the mechanism itself.
+
+The same property applies to P11 magnets (see composition section
+below). Same data, different surface effect, no extra engine cost.
+
+---
+
+### Emergent triggers — the Q2 emergent layer
+
+Temperature shifts are inferred, not set. There is no user-facing
+toggle in v1. The engine derives shifts from three sources:
+
+1. **Question content** — vulgar prompt → HOSTILE shift on intent;
+   plaintive prompt → WARM shift; sincere question to a panel of
+   mockers → INCONGRUENT shift as the cast disguises its reaction.
+2. **Character state events** — wound activated for any panellist,
+   M-Mech-9 fires, P9 lie escalation crosses threshold 2.
+3. **Panel-arc events** — round-count progression against per-panellist
+   arc rules, sustained same-mechanism firing (three M-Mech-3 fires
+   in five turns flags an escalating panel), hang-mode and consensus
+   detectors.
+
+An optional override at advanced settings ("force this panel to
+WARM tonight") is plausible in a later version. Not v1. The point of
+Lever 5 is that temperature *falls out of* cast + content + arc —
+not that the operator dials it.
+
+---
+
+### Composition with P11 Topic Magnets
+
+Magnets (character-schema.md P11) compose with Lever 5 via the same
+reading-mode colouring that handles M-Mech-1 / M-Mech-8.
+
+In HOT mode (HOSTILE intent), magnets surface as weapons: Souness's
+courage magnet becomes a contempt instrument; Sebastian's
+power-as-framework magnet becomes a status undercut device; Faldo's
+pastry magnet becomes a punctuation of someone else's pomposity.
+
+In WARM mode, the same magnets surface as shared references: Murray's
+Prestwick magnet becomes a panel running joke the others lean into;
+Cox's cosmic-timescale magnet becomes a benediction the others enjoy;
+Bear's hydration magnet becomes a recurring affectionate cue.
+
+The data is identical. The bias table does not touch magnet selection.
+The surface effect changes because the audience read changes — the
+same property as M-Mech-1 / M-Mech-8. Engine cost: zero.
+
+---
+
+### Pipeline / regression check
+
+Across N transcripts per panel, the engine output must satisfy:
+
+- **Default-temperature texture is observable.** A blind audience
+  reading transcripts without knowing the temperature value can
+  reliably distinguish HOSTILE panels from WARM panels at panel
+  defaults. If they cannot, the bias values are too low or the
+  cast composition is not actually loaded into bias.
+- **Mechanism firing rates match expected bias.** For a panel at
+  default temperature -0.6 / 0.0, M-Mech-3 should fire above the
+  zero-temperature base rate at the rate the bias table predicts,
+  within drift tolerance.
+- **Within-session drift events are visible downstream.** A turn that
+  fires wound-activated must measurably shift HOSTILE-biased mechanism
+  rates in subsequent turns of the same session. If drift events
+  do not propagate, the engine is computing temperature but not
+  applying it.
+- **Reading-mode colouring works.** M-Mech-8 fires across a HOT panel
+  and a WARM panel should fire at similar rates, but a blind audience
+  should read them differently. Validates that the colouring is doing
+  real work without smuggling itself into the bias table.
+
+Regression instrument: BL-184 measurement instrumentation suite —
+specifically M-4 (mechanism calibration drift) and M-6
+(disagreement-productivity index), both of which fold Lever 5
+measurement into existing instruments. A Lever 5–specific instrument
+(temperature-trace recorder) is a candidate addition; to be raised as
+a BL item against the Cusslab engine repo when integration lands.
+
+---
+
+### Status
+
+v1 draft, settled in primary session chat 2026-05-17. Two-axis model,
+bias-table approach, reading-mode-coloured nuance, composition with
+P11 and M-Mech-9 all locked. Numeric bias values are illustrative
+starting points — calibration follows once engine integration ships
+in Cusslab against a populated transcript corpus (engine integration
+BL to be raised). Until calibration data exists, this section is the
+contract the engine implementation must satisfy; the numbers are a
+seed, not a verdict.
+
+---
+
 ## Anti-patterns
 
 - **Saltwater crocodile in Northumberland** — flavour unconstrained by locale. Bank must be locale-aware.
